@@ -1,0 +1,51 @@
+name: Build Flash2Mart Customer APK
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch: # దీనివల్ల మీరు GitHub వెబ్‌సైట్ నుండి మాన్యువల్‌గా ఎప్పుడైనా "Run workflow" క్లిక్ చేసి APK బిల్డ్ చేయవచ్చు
+
+jobs:
+  build:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. రిపోజిటరీ కోడ్‌ని చెక్-అవుట్ చేయడం
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. Java 17 ఎన్విరాన్‌మెంట్ సెటప్
+      - name: Set up Java Development Kit (JDK)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'gradle'
+
+      # 3. Flutter SDK సెటప్
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      # 4. డిపెండెన్సీలను ఇన్‌స్టాల్ చేయడం
+      - name: Install Dependencies
+        run: flutter pub get
+
+      # 5. రిలీజ్ APK ని బిల్డ్ చేయడం
+      - name: Build Release APK
+        run: flutter build apk --release
+
+      # 6. APK ని డౌన్‌లోడ్ చేసుకోవడానికి ఆర్టిఫ్యాక్ట్‌గా అప్‌లోడ్ చేయడం
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Flash2Mart-Customer-App-Release-APK
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 14
