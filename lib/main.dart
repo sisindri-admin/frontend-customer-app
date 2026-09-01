@@ -5,7 +5,7 @@ import 'firebase_options.dart';
 import 'core/constants/app_colors.dart';
 import 'providers/cart_provider.dart';
 import 'providers/auth_provider.dart';
-import 'views/auth/login_screen.dart';
+import 'views/auth/customer_login_screen.dart';
 import 'views/main_navigation_screen.dart';
 
 void main() async {
@@ -45,7 +45,7 @@ class Flash2MartCustomerApp extends StatelessWidget {
                 elevation: 0,
               ),
             ),
-            home: auth.isAuthenticated ? const MainNavigationScreen() : const LoginScreen(),
+            home: auth.isAuthenticated ? const MainNavigationScreen() : const CustomerLoginScreen(),
           );
         },
       ),
